@@ -1,0 +1,5 @@
+ruby-monetdb-sql (1.0-1) unstable; urgency=low
+
+  * The Ruby interface to MonetDB is now a separate package.
+
+ -- Sjoerd Mullender <sjoerd@acm.org>  Wed, 02 Mar 2016 12:27:21 +0100
