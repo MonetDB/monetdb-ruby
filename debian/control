@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 9~),
 Standards-Version: 3.9.6
 Vcs-Hg: http://dev.monetdb.org/hg/monetdb-ruby/
 Vcs-Browser: http://dev.monetdb.org/hg/monetdb-ruby/
-Homepage: http://www.monetdb.org/
+Homepage: https://www.monetdb.org/
 Testsuite: autopkgtest-pkg-ruby
 XS-Ruby-Versions: all
 
@@ -17,7 +17,7 @@ XB-Ruby-Versions: ${ruby:Versions}
 Depends: ruby | ruby-interpreter,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: monetdb5-sql (>= 11.22.0)
+Recommends: monetdb5-sql
 Conflicts: ruby-monetdb-client
 Replaces: ruby-monetdb-client
 Description: Pure Ruby database driver for MonetDB/SQL
