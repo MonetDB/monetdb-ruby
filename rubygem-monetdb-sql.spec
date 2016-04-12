@@ -68,3 +68,5 @@ find %{buildroot}%{gem_instdir} -name \*.rb -exec chmod 0644 '{}' +
 %changelog
 * Wed Mar  2 2016 Sjoerd Mullender <sjoerd@acm.org> - 1.0-1
 - The Ruby interface to MonetDB is now a separate package.
+- The Ruby interface was updated to Ruby 2, and the activerecord
+  integration was removed.
