@@ -19,7 +19,7 @@ BuildArch:	noarch
 Requires:	ruby(release)
 Requires:	rubygem-bigdecimal
 
-Recommends:	MonetDB-SQL-server5 >= 11.22.0
+Recommends:	MonetDB-SQL-server5
 Suggests:	%{name}-doc = %{version}-%{release}
 
 %description
