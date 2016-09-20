@@ -33,7 +33,7 @@ This package contains a pure Ruby database driver for MonetDB/SQL.
 %package	doc
 Summary:	Documentation for %{name}
 Group:		Documentation
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 BuildArch:	noarch
 
 %description	doc
