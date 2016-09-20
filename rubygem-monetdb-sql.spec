@@ -3,7 +3,7 @@
 Name:		rubygem-%{gem_name}
 Epoch:		1
 Version:	1.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Pure Ruby database driver for MonetDB/SQL
 Group:		Applications/Databases
 
@@ -20,7 +20,7 @@ Requires:	ruby(release)
 Requires:	rubygem-bigdecimal
 
 Recommends:	MonetDB-SQL-server5
-Suggests:	%{name}-doc = %{version}-%{release}
+Suggests:	%{name}-doc = %{epoch}:%{version}-%{release}
 
 %description
 MonetDB is a database management system that is developed from a
@@ -66,6 +66,9 @@ find %{buildroot}%{gem_instdir} -name \*.rb -exec chmod 0644 '{}' +
 
 
 %changelog
+* Tue Sep 20 2016 Sjoerd Mullender <sjoerd@acm.org> - 1:1.0-2
+- Fixed dependency for rubygem-monetdb-sql-doc.
+
 * Wed Mar  2 2016 Sjoerd Mullender <sjoerd@acm.org> - 1.0-1
 - The Ruby interface to MonetDB is now a separate package.
 - The Ruby interface was updated to Ruby 2, and the activerecord
