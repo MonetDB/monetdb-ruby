@@ -2,8 +2,8 @@
 
 Name:		rubygem-%{gem_name}
 Epoch:		1
-Version:	1.0
-Release:	2%{?dist}
+Version:	1.1
+Release:	1%{?dist}
 Summary:	Pure Ruby database driver for MonetDB/SQL
 Group:		Applications/Databases
 
@@ -66,6 +66,9 @@ find %{buildroot}%{gem_instdir} -name \*.rb -exec chmod 0644 '{}' +
 
 
 %changelog
+* Mon Aug 19 2019 Sjoerd Mullender <sjoerd@acm.org> - 1:1.1-1
+- Fixed the blocksize in the Mapi protocol.
+
 * Tue Sep 20 2016 Sjoerd Mullender <sjoerd@acm.org> - 1:1.0-2
 - Fixed dependency for rubygem-monetdb-sql-doc.
 
