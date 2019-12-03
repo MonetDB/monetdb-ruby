@@ -1,3 +1,9 @@
+ruby-monetdb-sql (1.2) unstable; urgency=low
+
+  * Look for column names starting with '%' symbol at parse_header_table.
+
+ -- Pedro Ferreira <pedro.ferreira@monetdbsolutions.com>  Tue, 03 Dec 2019 14:12:22 +0100
+
 ruby-monetdb-sql (1.1) unstable; urgency=low
 
   * Fixed the blocksize in the Mapi protocol.

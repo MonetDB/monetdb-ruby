@@ -5,8 +5,8 @@ Maintainer: MonetDB BV <info@monetdb.org>
 Build-Depends: debhelper (>= 9~),
                gem2deb
 Standards-Version: 3.9.6
-Vcs-Hg: http://dev.monetdb.org/hg/monetdb-ruby/
-Vcs-Browser: http://dev.monetdb.org/hg/monetdb-ruby/
+Vcs-Hg: https://dev.monetdb.org/hg/monetdb-ruby/
+Vcs-Browser: https://dev.monetdb.org/hg/monetdb-ruby/
 Homepage: https://www.monetdb.org/
 Testsuite: autopkgtest-pkg-ruby
 XS-Ruby-Versions: all

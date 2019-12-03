@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Epoch:		1
-Version:	1.1
+Version:	1.2
 Release:	1%{?dist}
 Summary:	Pure Ruby database driver for MonetDB/SQL
 Group:		Applications/Databases
@@ -66,6 +66,9 @@ find %{buildroot}%{gem_instdir} -name \*.rb -exec chmod 0644 '{}' +
 
 
 %changelog
+* Tue Dec  3 2019 Pedro Ferreira <pedro.ferreira@monetdbsolutions.com> - 1:1.2-1
+- Look for column names starting with '%' symbol at parse_header_table.
+
 * Mon Aug 19 2019 Sjoerd Mullender <sjoerd@acm.org> - 1:1.1-1
 - Fixed the blocksize in the Mapi protocol.
 

@@ -1,4 +1,4 @@
-VERSION = 1.1
+VERSION = 1.2
 
 monetdb-sql-$(VERSION).gem: monetdb-sql.gemspec \
 		lib/MonetDB.rb lib/MonetDBConnection.rb \
