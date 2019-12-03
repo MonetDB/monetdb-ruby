@@ -153,6 +153,11 @@ class MonetDBData
      return @query['columns'].to_i
    end
 
+  # Returns the (ordered) name of the columns' tables in the record set
+  def table_name_fields
+    return @header['table_name']
+  end
+
   # Returns the (ordered) name of the columns in the record set
   def name_fields
     return @header['columns_name']
@@ -296,23 +301,39 @@ class MonetDBData
   def parse_header_table(header_t)
     if @query["type"] == MonetDBConnection::Q_TABLE
       if header_t != nil
-        name_t = header_t[0].split(' ')[1].gsub(/,$/, '')
-        name_cols = Array.new
       
-        header_t[1].split('%')[1].gsub(/'^\%'/, '').split('#')[0].split(' ').each do |col|
-          name_cols << col.gsub(/,$/, '')
+        name_t = header_t[0][2..-15].split(' ') # remove # table_name
+        name_t.each_with_index do |col, i|
+            if i != name_t.length - 1
+              name_t[i] = col[0..-2] # remove trailing comma
+            end
+        end
+      
+        name_cols = header_t[1][2..-9].split(' ') # remove # name
+        name_cols.each_with_index do |col, i|
+            if i != name_cols.length - 1
+              name_cols[i] = col[0..-2] # remove trailing comma
+            end
         end
       
         type_cols = { }
-        header_t[2].split('%')[1].gsub(/'^\%'/, '').split('#')[0].split(' ').each_with_index do |col, i|
-          if  col.gsub(/,$/, '') != nil
-            type_cols[ name_cols[i] ] = col.gsub(/,$/, '') 
-          end
+        type_cols_array = header_t[2][2..-9].split(' ') # remove # type
+        type_cols_array.each_with_index do |col, i|
+            if i != type_cols_array.length - 1
+              type_cols[name_cols[i]] = col[0..-2] # remove trailing comma
+            else
+              type_cols[name_cols[i]] = col
+            end
         end
       
         length_cols = { }
-        header_t[3].split('%')[1].gsub(/'^\%'/, '').split('#')[0].split(' ').each_with_index do |col, i|
-          length_cols[ name_cols[i] ] = col.gsub(/,$/, '')
+        length_cols_array = header_t[3][2..-11].split(' ') # remove # length
+        length_cols_array.each_with_index do |col, i|
+            if i != length_cols_array.length - 1
+              length_cols[name_cols[i]] = col[0..-2] # remove trailing comma
+            else
+              length_cols[name_cols[i]] = col
+            end
         end
       
         columns_order = {}
