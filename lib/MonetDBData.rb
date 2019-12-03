@@ -297,43 +297,77 @@ class MonetDBData
     return header.freeze
   end
   
+  # Parse escaped strings between double quotes
+  def parse_header_table_values(line, start, stop, results)
+    i = start
+    inString = false
+    escaped = false
+
+    until i == stop do
+      case line[i]
+        when '\\'
+          escaped = !escaped
+        when '"'
+          if !inString
+            inString = true
+          else
+            inString = false
+          end 
+          escaped = false
+        when ','
+          if !inString # && line[i + 1] == '\t'
+            if line[start] == '"' # Don't include the leading " in the column atribute
+              start += 1
+            end
+            if line[i - 1] == '"'
+              next_end = 2
+            else
+              next_end = 1
+            end
+            results.push(line[start..i - next_end])
+            i += 1
+            start = i + 1
+          end
+          escaped = false
+        else
+          escaped = false
+      end
+      i += 1
+    end
+    if line[start] == '"' # Don't include the leading " in the column atribute
+      start += 1
+    end
+    if line[stop] == '"'
+      next_end = 1
+    else
+      next_end = 0
+    end
+    results.push(line[start..stop - next_end])
+  end
+  
   # Parses a Q_TABLE header and returns information about the schema.
   def parse_header_table(header_t)
     if @query["type"] == MonetDBConnection::Q_TABLE
       if header_t != nil
       
-        name_t = header_t[0][2..-15].split(' ') # remove # table_name
-        name_t.each_with_index do |col, i|
-            if i != name_t.length - 1
-              name_t[i] = col[0..-2] # remove trailing comma
-            end
-        end
+        name_t = Array.new
+        parse_header_table_values(header_t[0], 2, header_t[0].length - 15, name_t)
       
-        name_cols = header_t[1][2..-9].split(' ') # remove # name
-        name_cols.each_with_index do |col, i|
-            if i != name_cols.length - 1
-              name_cols[i] = col[0..-2] # remove trailing comma
-            end
-        end
+        name_cols = Array.new
+        parse_header_table_values(header_t[1], 2, header_t[1].length - 9, name_cols)
       
         type_cols = { }
-        type_cols_array = header_t[2][2..-9].split(' ') # remove # type
+        type_cols_array = Array.new
+        parse_header_table_values(header_t[2], 2, header_t[2].length - 9, type_cols_array)
         type_cols_array.each_with_index do |col, i|
-            if i != type_cols_array.length - 1
-              type_cols[name_cols[i]] = col[0..-2] # remove trailing comma
-            else
               type_cols[name_cols[i]] = col
-            end
         end
       
         length_cols = { }
-        length_cols_array = header_t[3][2..-11].split(' ') # remove # length
+        length_cols_array = Array.new
+        parse_header_table_values(header_t[3], 2, header_t[3].length - 11, length_cols_array)
         length_cols_array.each_with_index do |col, i|
-            if i != length_cols_array.length - 1
-              length_cols[name_cols[i]] = col[0..-2] # remove trailing comma
-            else
               length_cols[name_cols[i]] = col
-            end
         end
       
         columns_order = {}
