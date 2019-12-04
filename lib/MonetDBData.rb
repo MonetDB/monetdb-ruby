@@ -310,7 +310,7 @@ class MonetDBData
         when '"'
           if !inString
             inString = true
-          else
+          elsif !escaped
             inString = false
           end 
           escaped = false
