@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
    s.required_ruby_version = '>= 1.8.0'
    s.name = %q{monetdb-sql}
    s.version = "1.2"
-   s.date = %q{2019-12-03}
+   s.date = %q{2020-10-20}
    s.authors = ["G Modena", "R Koopmanschap"]
    s.email = "info@monetdb.org"
    s.license = "MPL-2.0"
