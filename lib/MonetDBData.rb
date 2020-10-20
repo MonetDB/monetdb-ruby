@@ -15,35 +15,35 @@ require_relative 'MonetDBConnection'
 
 require 'logger'
 
-class MonetDBData 
+class MonetDBData
   @@DEBUG               = false
- 
+
   def initialize(connection)
     @connection = connection
     @lang = @connection.lang
 
-    # Structure containing the header+results set for a fired Q_TABLE query     
+    # Structure containing the header+results set for a fired Q_TABLE query
     @header = []
     @query  = {}
-    
+
     @record_set = []
     @index = 0 # Position of the last returned record
-    
-    
+
+
     @row_count = 0
     @row_offset = 10
     @row_index = Integer(MonetDBConnection::REPLY_SIZE)
   end
-  
+
   # Fire a query and return the server response
   def execute(q)
-   # fire a query and get ready to receive the data      
+   # fire a query and get ready to receive the data
     @connection.send(format_query(q))
     data = @connection.receive
-    
+
     return if data == nil
-    
-    record_set = "" # temporarly store retrieved rows
+
+    record_set = "" # temporarily store retrieved rows
     record_set = receive_record_set(data)
 
     if (@lang == MonetDBConnection::LANG_SQL)
@@ -52,7 +52,7 @@ class MonetDBData
       if @action == MonetDBConnection::Q_TABLE
         @header = parse_header_table(@header)
         @header.freeze
-      
+
         if @row_index.to_i < @row_count.to_i
           block_rows = ""
           while next_block
@@ -66,15 +66,15 @@ class MonetDBData
       # ruby string management seems to not properly understand the MSG_PROMPT escape character.
       # In order to avoid data loss the @record_set array is built once that all tuples have been retrieved
       @record_set = record_set.split("\t]\n")
-      
+
       if @record_set.length != @query['rows'].to_i
         raise MonetDBQueryError, "Warning: Query #{@query['id']} declared to result in #{@query['rows']} but #{@record_set.length} returned instead"
       end
     end
-    @record_set.freeze  
+    @record_set.freeze
   end
-  
-  # Returns the record set entries hashed by column name orderd by column position
+
+  # Returns the record set entries hashed by column name ordered by column position
   def fetch_all_as_column_hash
      columns = {}
      @header["columns_name"].each do |col_name|
@@ -86,7 +86,7 @@ class MonetDBData
 
   # returns a record hash (i.e: { id: 1, name: "John Doe", age: 42 } )
   def fetch_hash
-    return false if @index >= @query['rows'].to_i 
+    return false if @index >= @query['rows'].to_i
 
     record_hash = record_hash(parse_tuple(@record_set[@index]))
     @index += 1
@@ -95,7 +95,7 @@ class MonetDBData
 
   # loops through all the hashes of the records and yields them to a given block
   def each_record_as_hash
-    @record_set.each do |record| 
+    @record_set.each do |record|
       parsed_record = parse_tuple(record)
       yield(record_hash(parsed_record))
     end
@@ -128,9 +128,9 @@ class MonetDBData
     @index = 0
   end
 
-  # loops through all records and yields to a given block paramter
+  # loops through all records and yields to a given block parameter
   def each_record
-    raise MonetDBDataError, "There is no record set currently available" unless @query['type'] == MonetDBConnection::Q_TABLE 
+    raise MonetDBDataError, "There is no record set currently available" unless @query['type'] == MonetDBConnection::Q_TABLE
     @record_set.each { |record| yield(parse_tuple(record)) }
   end
 
@@ -142,7 +142,7 @@ class MonetDBData
     end
     return result
   end
-  
+
   # Returns the number of rows in the record set
   def num_rows
       return @query['rows'].to_i
@@ -162,16 +162,16 @@ class MonetDBData
   def name_fields
     return @header['columns_name']
   end
-  
+
   # Returns the (ordered) name of the columns in the record set
   def type_fields
     return @header['columns_type']
   end
-  
+
   # ===================
           private
   # ===================
-  
+
   # store block of data, parse it and store it.
   def receive_record_set(response)
     rows = ""
@@ -193,17 +193,17 @@ class MonetDBData
         @action = MonetDBConnection::Q_TABLE
         @query = parse_header_query(row)
         @query.freeze
-        @row_count = @query['rows'].to_i #total number of rows in table        
+        @row_count = @query['rows'].to_i #total number of rows in table
       when MonetDBConnection::Q_BLOCK
         @action = MonetDBConnection::Q_BLOCK # strip the block header from data
-        @block = parse_header_query(row)     
+        @block = parse_header_query(row)
       when MonetDBConnection::Q_TRANSACTION
         @action = MonetDBConnection::Q_TRANSACTION
       when MonetDBConnection::Q_CREATE
         @action = MonetDBConnection::Q_CREATE
     end
   end
-  
+
   def record_hash(record)
     result = {}
 
@@ -223,16 +223,16 @@ class MonetDBData
       # For larger values of the step performance drop;
       #
       @row_offset = [@row_offset, (@row_count - @row_index)].min
-      
+
       # export offset amount
-      @connection.set_export(@query['id'], @row_index.to_s, @row_offset.to_s)    
-      @row_index += @row_offset    
+      @connection.set_export(@query['id'], @row_index.to_s, @row_offset.to_s)
+      @row_index += @row_offset
       @row_offset += 1
-    end    
+    end
       return true
-      
+
   end
-  
+
   # Formats a query <i>string</i> so that it can be parsed by the server
   def format_query(q)
     if @lang == MonetDBConnection::LANG_SQL
@@ -241,7 +241,7 @@ class MonetDBData
       raise LanguageNotSupported, @lang
     end
   end
-  
+
   # parse one tuple as returned from the server
   def parse_tuple(tuple)
     fields = []
@@ -251,7 +251,7 @@ class MonetDBData
       field_value = convert_type(field, index)
       fields << field_value
     end
-    
+
     return fields.freeze
   end
 
@@ -269,34 +269,34 @@ class MonetDBData
         else value.gsub(/\\/, '').gsub(/^"/,'').gsub(/"$/,'').gsub(/\"/, '')
       end
   end
-  
+
   # Parses a query header and returns information about the query.
   def parse_header_query(row)
     type = row[1].chr
     if type == MonetDBConnection::Q_TABLE
-      # Performing a SELECT: store informations about the table size, query id, total number of records and returned.
+      # Performing a SELECT: store information about the table size, query id, total number of records and returned.
       id = row.split(' ')[1]
       rows = row.split(' ')[2]
       columns = row.split(' ')[3]
       returned = row.split(' ')[4]
-      
+
       header = { "id" => id, "type" => type, "rows" => rows, "columns" => columns, "returned" => returned }
     elsif  type == MonetDBConnection::Q_BLOCK
       # processing block header
-    
+
       id = row.split(' ')[1]
       columns = row.split(' ')[2]
       remains = row.split(' ')[3]
       offset = row.split(' ')[4]
-      
+
       header = { "id" => id, "type" => type, "remains" => remains, "columns" => columns, "offset" => offset }
     else
       header = {"type" => type}
     end
-    
+
     return header.freeze
   end
-  
+
   # Parse escaped strings between double quotes
   def parse_header_table_values(line, start, stop, results)
     i = start
@@ -312,11 +312,11 @@ class MonetDBData
             inString = true
           elsif !escaped
             inString = false
-          end 
+          end
           escaped = false
         when ','
           if !inString # && line[i + 1] == '\t'
-            if line[start] == '"' # Don't include the leading " in the column atribute
+            if line[start] == '"' # Don't include the leading " in the column attribute
               start += 1
             end
             if line[i - 1] == '"'
@@ -334,7 +334,7 @@ class MonetDBData
       end
       i += 1
     end
-    if line[start] == '"' # Don't include the leading " in the column atribute
+    if line[start] == '"' # Don't include the leading " in the column attribute
       start += 1
     end
     if line[stop] == '"'
@@ -344,38 +344,38 @@ class MonetDBData
     end
     results.push(line[start..stop - next_end])
   end
-  
+
   # Parses a Q_TABLE header and returns information about the schema.
   def parse_header_table(header_t)
     if @query["type"] == MonetDBConnection::Q_TABLE
       if header_t != nil
-      
+
         name_t = Array.new
         parse_header_table_values(header_t[0], 2, header_t[0].length - 15, name_t)
-      
+
         name_cols = Array.new
         parse_header_table_values(header_t[1], 2, header_t[1].length - 9, name_cols)
-      
+
         type_cols = { }
         type_cols_array = Array.new
         parse_header_table_values(header_t[2], 2, header_t[2].length - 9, type_cols_array)
         type_cols_array.each_with_index do |col, i|
               type_cols[name_cols[i]] = col
         end
-      
+
         length_cols = { }
         length_cols_array = Array.new
         parse_header_table_values(header_t[3], 2, header_t[3].length - 11, length_cols_array)
         length_cols_array.each_with_index do |col, i|
               length_cols[name_cols[i]] = col
         end
-      
+
         columns_order = {}
         name_cols.each_with_index do |col, i|
           columns_order[col] = i
         end
-      
-        return {"table_name" => name_t, "columns_name" => name_cols, "columns_type" => type_cols, 
+
+        return {"table_name" => name_t, "columns_name" => name_cols, "columns_type" => type_cols,
           "columns_length" => length_cols, "columns_order" => columns_order}.freeze
       end
     end

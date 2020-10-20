@@ -6,7 +6,7 @@
 
 require 'digest/md5'
 require 'digest/sha1'
-require 'digest/sha2' 
+require 'digest/sha2'
 
 class Hasher
 	# Constructor
@@ -16,7 +16,7 @@ class Hasher
           if (method.upcase == "SHA1")
                   @hashfunc = Digest::SHA1.new
                   @hashname = method.upcase
-          elsif (method.upcase == "SHA256") 
+          elsif (method.upcase == "SHA256")
             @hashfunc = Digest::SHA256.new
             @hashname = method.upcase
           elsif (method.upcase == "SHA384")
@@ -32,7 +32,7 @@ class Hasher
           end
           @pwd = pwd
   end
-  
+
 
 	def hashname
 		@hashname
