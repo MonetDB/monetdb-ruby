@@ -37,3 +37,7 @@ rpm: rubygem-monetdb-sql.spec monetdb-sql-$(VERSION).gem
 deb: monetdb-sql-$(VERSION).gem debian/changelog debian/control debian/rules \
 		debian/copyright debian/source/format debian/compat
 	pdebuild --use-pdebuild-internal
+
+.PHONY: tar
+tar:
+	hg archive rubygem-monetdb-$(VERSION).tar.bz2
