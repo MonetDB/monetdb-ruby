@@ -19,8 +19,10 @@ BuildArch:	noarch
 Requires:	ruby(release)
 Requires:	rubygem-bigdecimal
 
+%if (0%{?fedora} >= 22)
 Recommends:	MonetDB-SQL-server5
 Suggests:	%{name}-doc = %{epoch}:%{version}-%{release}
+%endif
 
 %description
 MonetDB is a database management system that is developed from a
