@@ -5,15 +5,14 @@
 # This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
 # For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
 
-name: Linux
+name: MacOS
 
 on:
   [push]
 
 jobs:
   test:
-
-    runs-on: ubuntu-latest
+    runs-on: macos-10.15
 
     steps:
     - uses: actions/checkout@v2
