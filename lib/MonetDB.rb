@@ -16,8 +16,18 @@ class MonetDB
 	DEFAULT_PORT     = 50000
 	DEFAULT_DATABASE = "test"
 	DEFAULT_AUTHTYPE = "SHA1"
+	DEFAULT_MIN_POOLS     = 1
+	DEFAULT_MAX_POOLS     = 20
 
-	def initalize()
+	def initialize(min_pools=DEFAULT_MIN_POOLS, max_pools=DEFAULT_MAX_POOLS)
+		if min_pools < DEFAULT_MIN_POOLS
+			min_pools = DEFAULT_MIN_POOLS
+        elsif max_pools < min_pools
+			raise "Max Pools cannot be less than min pools"
+		end
+
+		@min_pools = min_pools
+		@max_pools = max_pools
 		@connection = nil
 	end
 
@@ -30,7 +40,6 @@ class MonetDB
 	#                * db_name: name of the database to connect to
 	#                * auth_type: hashing function to use during authentication (default is SHA1)
 	def connect(username=DEFAULT_USERNAME, password=DEFAULT_PASSWORD, lang=DEFAULT_LANG, host=DEFAULT_HOST, port=DEFAULT_PORT, db_name=DEFAULT_DATABASE, auth_type=DEFAULT_AUTHTYPE)
-		# TODO: handle pools of connections
 
 		@username = username
 		@password = password
