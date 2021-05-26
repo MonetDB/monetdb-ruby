@@ -19,16 +19,21 @@ class MonetDB
 	DEFAULT_MIN_POOLS     = 1
 	DEFAULT_MAX_POOLS     = 20
 
+	@@CONNECTION_POOL = []
+
 	def initialize(min_pools=DEFAULT_MIN_POOLS, max_pools=DEFAULT_MAX_POOLS)
+		@min_pools = min_pools
+		@max_pools = max_pools
+
 		if min_pools < DEFAULT_MIN_POOLS
 			min_pools = DEFAULT_MIN_POOLS
         elsif max_pools < min_pools
 			raise "Max Pools cannot be less than min pools"
 		end
 
-		@min_pools = min_pools
-		@max_pools = max_pools
 		@connection = nil
+
+        @@CONNECTION_POOL = Array.new(max_pools)
 	end
 
 	# Establish a new connection.
@@ -51,6 +56,9 @@ class MonetDB
 
 		@connection = MonetDBConnection.new(user = @username, passwd = @password, lang = @lang, host = @host, port = @port)
 		@connection.connect(@db_name, @auth_type)
+
+		# FIXME: Ruby resizes the array.
+		@@CONNECTION_POOL.append(@connection)
 	end
 
 	# Establish a new connection using named parameters.
