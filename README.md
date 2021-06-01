@@ -7,13 +7,17 @@ Ruby driver for MonetDB
 First build a gem file starting from the given gemspec:
 
 ```bash
- gem build ruby-monetdb-sql.gemspec
+ gem build monetdb-sql.gemspec
+```
+Or:
+```bash
+make
 ```
 
 Then install the resulting gem with the command:
 
 ```bash
- gem install --local ruby-monetdb-sql-1.2.gem
+ gem install --local monetdb-sql-1.2.gem
 ```
 
 ## Example
