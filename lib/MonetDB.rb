@@ -7,6 +7,7 @@
 require_relative 'MonetDBConnection'
 require_relative 'MonetDBData'
 require_relative 'MonetDBExceptions'
+require_relative 'ConnectionPool'
 
 class MonetDB
 	DEFAULT_USERNAME = "monetdb"
@@ -16,24 +17,11 @@ class MonetDB
 	DEFAULT_PORT     = 50000
 	DEFAULT_DATABASE = "test"
 	DEFAULT_AUTHTYPE = "SHA1"
-	DEFAULT_MIN_POOLS     = 1
-	DEFAULT_MAX_POOLS     = 20
 
-	@@CONNECTION_POOL = []
-
-	def initialize(min_pools=DEFAULT_MIN_POOLS, max_pools=DEFAULT_MAX_POOLS)
-		@min_pools = min_pools
-		@max_pools = max_pools
-
-		if min_pools < DEFAULT_MIN_POOLS
-			min_pools = DEFAULT_MIN_POOLS
-        elsif max_pools < min_pools
-			raise "Max Pools cannot be less than min pools"
-		end
+	def initialize(max_pool)
+		@@POOL = ConnectionPool.new(max_pool)
 
 		@connection = nil
-
-        @@CONNECTION_POOL = Array.new(max_pools)
 	end
 
 	# Establish a new connection.
@@ -45,7 +33,6 @@ class MonetDB
 	#                * db_name: name of the database to connect to
 	#                * auth_type: hashing function to use during authentication (default is SHA1)
 	def connect(username=DEFAULT_USERNAME, password=DEFAULT_PASSWORD, lang=DEFAULT_LANG, host=DEFAULT_HOST, port=DEFAULT_PORT, db_name=DEFAULT_DATABASE, auth_type=DEFAULT_AUTHTYPE)
-
 		@username = username
 		@password = password
 		@lang = lang
@@ -56,9 +43,7 @@ class MonetDB
 
 		@connection = MonetDBConnection.new(user = @username, passwd = @password, lang = @lang, host = @host, port = @port)
 		@connection.connect(@db_name, @auth_type)
-
-		# FIXME: Ruby resizes the array.
-		@@CONNECTION_POOL.append(@connection)
+		@@POOL.add(@connection)
 	end
 
 	# Establish a new connection using named parameters.
