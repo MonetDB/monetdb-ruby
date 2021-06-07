@@ -18,7 +18,7 @@ class MonetDB
 	DEFAULT_DATABASE = "test"
 	DEFAULT_AUTHTYPE = "SHA1"
 
-	def initialize(max_pool)
+	def initialize(max_pool = 20)
 		@@POOL = ConnectionPool.new(max_pool)
 
 		@connection = nil
@@ -100,6 +100,7 @@ class MonetDB
 
 			@connection = MonetDBConnection.new(user = @username, passwd = @password, lang = @lang, host = @host, port = @port)
 			@connection.connect(db_name = @db_name, auth_type = @auth_type)
+			@@POOL.add(@connection)
 		end
 	end
 
@@ -131,6 +132,8 @@ class MonetDB
 	# Close an active connection
 	def close()
 		@connection.disconnect
+		@@POOL.free(@connection)
+		puts @@POOL.size()
 		@connection = nil
 	end
 end
