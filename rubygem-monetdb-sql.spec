@@ -3,7 +3,7 @@
 Name:		rubygem-%{gem_name}
 Epoch:		1
 Version:	1.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Pure Ruby database driver for MonetDB/SQL
 Group:		Applications/Databases
 
@@ -17,7 +17,10 @@ BuildRequires:	ruby >= 1.8.0
 BuildArch:	noarch
 
 Requires:	ruby(release)
-Requires:	rubygem-bigdecimal
+Requires:	rubygem(bigdecimal)
+%if (0%{?fedora} >= 42) || (0%{?rhel} >= 10)
+Requires:	rubygem(ostruct)
+%endif
 
 %if (0%{?fedora} >= 22)
 Recommends:	MonetDB-SQL-server5
