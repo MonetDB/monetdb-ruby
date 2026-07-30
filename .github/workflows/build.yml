@@ -7,26 +7,26 @@
 
 name: Ruby builds
 on:
-	[push]
+  [push]
 
 jobs:
-	test:
-		strategy:
-			matrix:
-				ruby-version: [ '3.3', '4.0' ]
-		os: [ ubuntu-latest, macos-latest ]
-	runs-on: ${{ matrix.os }}
-	steps:
-		- name: checkout
-			uses: actions/checkout@v6
-		- name: Set up Ruby ${{ matrix.ruby-version }}
-			uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
-			with:
-				ruby-version: ${{ matrix.ruby-version }}
-		- name: Install dependencies
-			run: |
-				bundle install
-				gem build monetdb-sql.gemspec
-				gem install --local monetdb-sql-1.2.gem
-		- name: Run tests
-			run: bundle exec rake
+  test:
+    strategy:
+      matrix:
+        ruby-version: [ '3.3', '4.0' ]
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+      - name: Install dependencies
+        run: |
+          bundle install
+          gem build monetdb-sql.gemspec
+          gem install --local monetdb-sql-1.2.gem
+      - name: Run tests
+        run: bundle exec rake
