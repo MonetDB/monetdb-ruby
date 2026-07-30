@@ -7,9 +7,9 @@ Release:	1%{?dist}
 Summary:	Pure Ruby database driver for MonetDB/SQL
 Group:		Applications/Databases
 
-License:	MPLv2.0
-URL:		http://www.monetdb.org/
-Source0:	http://dev.monetdb.org/downloads/ruby/gems/%{gem_name}-%{version}.gem
+License:	MPL-2.0
+URL:		https://www.monetdb.org/
+Source0:	https://dev.monetdb.org/downloads/ruby/gems/%{gem_name}-%{version}.gem
 
 BuildRequires:	ruby(release)
 BuildRequires:	rubygems-devel
