@@ -3,7 +3,7 @@
 Name:		rubygem-%{gem_name}
 Epoch:		1
 Version:	1.2
-Release:	2%{?dist}
+Release:	1%{?dist}
 Summary:	Pure Ruby database driver for MonetDB/SQL
 Group:		Applications/Databases
 
