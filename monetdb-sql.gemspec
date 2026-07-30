@@ -12,6 +12,4 @@ Gem::Specification.new do |s|
 	s.description = %q{Pure Ruby database driver for the MonetDB/SQL columnar database management system}
 	s.files = ["lib/MonetDB.rb", "lib/MonetDBConnection.rb", "lib/MonetDBData.rb", "lib/MonetDBExceptions.rb", "lib/hasher.rb"]
 	s.require_path = './lib'
-	# placeholder project to avoid warning about not having a rubyforge_project
-	s.rubyforge_project = "nowarning"
 end
