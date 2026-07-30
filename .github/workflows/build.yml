@@ -7,7 +7,7 @@
 
 name: Ruby builds
 on:
-  [push]
+  push:
 
 jobs:
   test:
