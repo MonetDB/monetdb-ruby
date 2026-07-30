@@ -15,15 +15,19 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        ruby-version: [ '3.3', '4.0' ]
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
-      with:
-        ruby-version: 2.6
+	- uses: actions/checkout@v6
+	- name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
     - name: Install dependencies
       run: |
-        gem build monetdb-sql.gemspec 
+        gem build monetdb-sql.gemspec
         gem install --local monetdb-sql-1.2.gem
     # - name: Run tests
     #   run: bundle exec rake
