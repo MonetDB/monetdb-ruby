@@ -61,6 +61,7 @@ find %{buildroot}%{gem_instdir} -name \*.rb -exec chmod 0644 '{}' +
 
 
 %files
+%license LICENSE
 %dir %{gem_instdir}
 %{gem_libdir}
 %exclude %{gem_cache}
